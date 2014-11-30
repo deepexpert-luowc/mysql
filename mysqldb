@@ -1,0 +1,50 @@
+__author__ = 'Administrator'
+import MySQLdb
+import re
+import urllib
+import urllib2
+import cookielib
+import MySQLdb
+def check (name):
+        data = {"d_name":"","dtype":"common"}
+        data["d_name"] = name
+        post_data = urllib.urlencode(data)
+        cj = cookielib.CookieJar
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        headers = {"User-agent":"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1"}
+        req = urllib2.Request("http://www.zgsj.com/domain_reg/domaintrans.asp",post_data,headers)
+        content = urllib2.urlopen(req)
+        c=content.read()
+        p = re.compile('<tr height=.*?value=\'(.*?)\' />').findall(c)
+        if p:
+            return  name
+        else:
+            return 'useless'
+def insert(nam):
+    db = MySQLdb.connect("localhost","root","123456","example" )
+    cursor = db.cursor()
+    sql = """insert into mytable values ("%s")"""
+    try:
+      cursor.execute(sql%(nam))
+      db.commit()
+    except:
+      db.rollback()
+    db.close
+def apply():
+    a=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    for i1 in a:
+        for i2 in a:
+             for i3 in a:
+                 for i4 in a:
+                       for i5 in a:
+                           p=check(i1+i2+i3+i4+i5+'.com')
+                           if p!='useless':
+                               print i1+i2+i3+i4
+                               insert(i1+i2+i3+i4+i5)
+                           for i6 in a:
+                               check(i1+i2+i3+i4+i5+i6+'.com')
+                               if p!='useless':
+                                   print i1+i2+i3+i4+i5+i6
+                                   insert(i1+i2+i3+i4+i5+i6)
+
+apply()
